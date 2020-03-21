@@ -107,7 +107,7 @@ public:
 	int mintMinWinLength;
 
     // adaptive hoeffding bound
-    bool isAdaptive;
+    bool isAdaptive = false;
     double tension;
     double expectedDriftProb = -1;
 
