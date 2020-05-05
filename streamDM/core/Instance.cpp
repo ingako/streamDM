@@ -36,21 +36,6 @@ Instance::~Instance() {
 	}
 }
 
-void Instance::setAttributeStatus(vector<int>& indices) {
-    attributeStatus.clear();
-    for (int i = 0; i < this->getNumberInputAttributes(); i++) {
-        attributeStatus.push_back(false);
-    }
-
-    for (int idx : indices) {
-        attributeStatus[idx] = true;
-    }
-}
-
-bool Instance::isAttributeEnabled(int idx) const {
-    return attributeStatus[idx];
-}
-
 int Instance::getNumberClasses() const {
 	return instanceInformation->getNumberClasses();
 }
