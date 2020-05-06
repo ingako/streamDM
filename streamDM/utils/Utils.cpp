@@ -35,23 +35,19 @@ Utils::Utils() {
 	}
 }
 
-vector<int> Utils::selectKNums(int n, int k) {
-    vector<int> stream;
-    for (int i = 0; i < n; i++) {
-        stream.push_back(i);
-    }
-
-    int i;
+vector<int> Utils::selectKNums(int n, int k, std::mt19937 mrand) {
     vector<int> reservoir;
-    for (i = 0; i < k; i++) {
-        reservoir.push_back(stream[i]);
+    for (int i = 0; i < k; i++) {
+        reservoir.push_back(i);
     }
 
-    for (; i < n; i++) {
-        int j = rand() % (i + 1);
+    for (int i = k; i < n; i++) {
+        std::uniform_int_distribution<int> distr(0, i);
+        int j = distr(mrand);
+        // int j = rand() % (i + 1);
 
         if (j < k) {
-            reservoir[j] = stream[i];
+            reservoir[j] = i;
         }
     }
 
