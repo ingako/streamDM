@@ -338,8 +338,7 @@ void InactiveLearningNode::learnFromInstance(const Instance* inst,
 			inst->getWeight());
 }
 
-ActiveLearningNode::ActiveLearningNode(
-		const vector<double>& initialClassObservations) :
+ActiveLearningNode::ActiveLearningNode(const vector<double>& initialClassObservations) :
 		LearningNode(initialClassObservations) {
 	weightSeenAtLastSplitEvaluation = getWeightSeen();
 	isInitialized = false;
@@ -432,8 +431,11 @@ void ActiveLearningNode::learnFromInstance(const Instance* inst,
 	}
 
 	auto iter = (*attributeObservers).begin();
-	// TODO
-//	for (int i = 0; i < attrObsSize; i++, iter++) {
+
+    vector<int> attribute_indices = Utils::selectKNums(
+            inst->getNumberInputAttributes(),
+            sqrt(inst->getNumberInputAttributes()));
+
 	for (int i = 0; i < inst->getNumberInputAttributes(); i++, iter++) {
 		int instAttIndex = i;
 
@@ -445,12 +447,13 @@ void ActiveLearningNode::learnFromInstance(const Instance* inst,
 			(*iter) = obs;
 		}
 
-        if (!inst->isAttributeEnabled(instAttIndex)) {
-            continue;
+        int inst_weight = 0;
+        if (std::find(attribute_indices.begin(), attribute_indices.end(), instAttIndex) != attribute_indices.end()) {
+            inst_weight = inst->getWeight();
         }
 
-		obs->observeAttributeClass(inst->getInputAttributeValue(instAttIndex),
-				(int) inst->getLabel(), inst->getWeight());
+        obs->observeAttributeClass(inst->getInputAttributeValue(instAttIndex),
+                (int) inst->getLabel(), inst_weight);
 	}
 }
 
