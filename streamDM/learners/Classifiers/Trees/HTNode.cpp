@@ -439,7 +439,7 @@ void ActiveLearningNode::learnFromInstance(const Instance* inst,
 
     vector<int> attribute_indices = Utils::selectKNums(
             inst->getNumberInputAttributes(),
-            sqrt(inst->getNumberInputAttributes()),
+            sqrt(inst->getNumberInputAttributes()) + 1,
             mrand);
 
 	for (int i = 0; i < inst->getNumberInputAttributes(); i++, iter++) {
