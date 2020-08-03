@@ -34,6 +34,7 @@ class HoeffdingTree: public Learner {
 public:
 	HoeffdingTree();
 	HoeffdingTree(std:: mt19937 mrand);
+	HoeffdingTree(int leafPredictionType, std:: mt19937 mrand);
 	virtual ~HoeffdingTree();
 
 	void train(const Instance&);

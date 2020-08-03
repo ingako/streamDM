@@ -55,6 +55,13 @@ HoeffdingTree::HoeffdingTree(std::mt19937 mrand) :
     this->mrand = mrand;
 }
 
+HoeffdingTree::HoeffdingTree(int leafPredictionType,
+                             std::mt19937 mrand) :
+    HoeffdingTree() {
+    this->params.leafPrediction = leafPredictionType;
+    this->mrand = mrand;
+}
+
 HoeffdingTree::~HoeffdingTree() {
 	if (classPrediction != nullptr) {
 		delete[] classPrediction;
@@ -109,7 +116,7 @@ HoeffdingTree::Params::Params() {
 	stopMemManagement = false;
 //	removePoorAtts;
 	noPrePrune = false;
-	this->leafPrediction = 0;
+    this->leafPrediction = 0;
 	this->nbThreshold = 0;
 }
 
