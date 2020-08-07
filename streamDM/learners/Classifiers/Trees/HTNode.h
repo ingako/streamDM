@@ -127,7 +127,7 @@ public:
 	int attrObsSize;
 	bool isInitialized;
 
-    ActiveLearningNode(const vector<double>& initialClassObservations, std::mt19937 mrand);
+    ActiveLearningNode(const vector<double>& initialClassObservations, std::mt19937& mrand);
 	ActiveLearningNode(const vector<double>& initialClassObservations);
 	ActiveLearningNode(const Json::Value& jv);
 	~ActiveLearningNode();

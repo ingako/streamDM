@@ -32,7 +32,7 @@ using namespace std;
 class Utils {
 public:
 	Utils();
-    static vector<int> selectKNums(int n, int k, std::mt19937 mrand);
+    static vector<int> selectKNums(int n, int k, std::mt19937& mrand);
 	static int poisson(double lambda);
 	static double elapsedTime(clock_t start);
 

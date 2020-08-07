@@ -338,7 +338,7 @@ void InactiveLearningNode::learnFromInstance(const Instance* inst,
 			inst->getWeight());
 }
 
-ActiveLearningNode::ActiveLearningNode(const vector<double>& initialClassObservations, std::mt19937 mrand) :
+ActiveLearningNode::ActiveLearningNode(const vector<double>& initialClassObservations, std::mt19937& mrand) :
         ActiveLearningNode(initialClassObservations) {
     this->mrand = mrand;
 }

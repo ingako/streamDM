@@ -50,13 +50,13 @@ HoeffdingTree::HoeffdingTree() {
 	renew();
 }
 
-HoeffdingTree::HoeffdingTree(std::mt19937 mrand) :
+HoeffdingTree::HoeffdingTree(std::mt19937& mrand) :
     HoeffdingTree() {
     this->mrand = mrand;
 }
 
 HoeffdingTree::HoeffdingTree(int leafPredictionType,
-                             std::mt19937 mrand) :
+                             std::mt19937& mrand) :
     HoeffdingTree() {
     this->params.leafPrediction = leafPredictionType;
     this->mrand = mrand;

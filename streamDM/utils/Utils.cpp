@@ -35,7 +35,7 @@ Utils::Utils() {
 	}
 }
 
-vector<int> Utils::selectKNums(int n, int k, std::mt19937 mrand) {
+vector<int> Utils::selectKNums(int n, int k, std::mt19937& mrand) {
     vector<int> reservoir;
     for (int i = 0; i < k; i++) {
         reservoir.push_back(i);
