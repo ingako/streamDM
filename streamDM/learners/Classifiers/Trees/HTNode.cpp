@@ -611,6 +611,13 @@ LearningNodeNB::LearningNodeNB(const vector<double>& initialClassObservations) :
 	this->mClassTypes = {NT_LearningNodeNB,NT_ActiveLearningNode,NT_LearningNode,NT_Node};
 }
 
+LearningNodeNB::LearningNodeNB(
+        const vector<double>& initialClassObservations,
+        mt19937& mrand) :
+		ActiveLearningNode(initialClassObservations, mrand) {
+	this->mClassTypes = {NT_LearningNodeNB,NT_ActiveLearningNode,NT_LearningNode,NT_Node};
+}
+
 LearningNodeNB::LearningNodeNB(const Json::Value& jv) :
 		ActiveLearningNode(jv) {
 	this->mClassTypes = {NT_LearningNodeNB,NT_ActiveLearningNode,NT_LearningNode,NT_Node};
@@ -681,6 +688,15 @@ vector<double>& LearningNodeNB::doNaiveBayesPrediction(const Instance* inst,
 LearningNodeNBAdaptive::LearningNodeNBAdaptive(
 		const vector<double>& initialClassObservations) :
 		LearningNodeNB(initialClassObservations) {
+	this->mcCorrectWeight = 0.0f;
+	this->nbCorrectWeight = 0.0f;
+	this->mClassTypes = {NT_LearningNodeNBAdaptive, NT_LearningNodeNB, NT_ActiveLearningNode, NT_LearningNode, NT_Node};
+}
+
+LearningNodeNBAdaptive::LearningNodeNBAdaptive(
+		const vector<double>& initialClassObservations,
+        mt19937& mrand) :
+		LearningNodeNB(initialClassObservations, mrand) {
 	this->mcCorrectWeight = 0.0f;
 	this->nbCorrectWeight = 0.0f;
 	this->mClassTypes = {NT_LearningNodeNBAdaptive, NT_LearningNodeNB, NT_ActiveLearningNode, NT_LearningNode, NT_Node};

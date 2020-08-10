@@ -109,8 +109,8 @@ void HoeffdingTree::doSetParams() {
 HoeffdingTree::Params::Params() {
 	maxByteSize = 33554432;
 	memoryEstimatePeriod = 1000000;
-	gracePeriod = 200;
-	splitConfidence = 0.0000001f;
+	gracePeriod = 200; // 50
+	splitConfidence = 0.0000001f; // 0.01
 	tieThreshold = 0.05;
 	binarySplits = false;
 	stopMemManagement = false;
@@ -705,9 +705,9 @@ LearningNode* HoeffdingTree::newLearningNode(
 	if (this->params.leafPrediction == 0) { //MC
 		ret = new ActiveLearningNode(initialClassObservations, mrand);
 	} else if (this->params.leafPrediction == 1) { //NB
-		ret = new LearningNodeNB(initialClassObservations);
+		ret = new LearningNodeNB(initialClassObservations, mrand);
 	} else { //NBAdaptive
-		ret = new LearningNodeNBAdaptive(initialClassObservations);
+		ret = new LearningNodeNBAdaptive(initialClassObservations, mrand);
 	}
 	return ret;
 }
