@@ -55,9 +55,31 @@ HoeffdingTree::HoeffdingTree(std::mt19937& mrand) :
     this->mrand = mrand;
 }
 
-HoeffdingTree::HoeffdingTree(int leafPredictionType,
-                             std::mt19937& mrand) :
-    HoeffdingTree() {
+HoeffdingTree::HoeffdingTree(
+        int leafPredictionType,
+        std::mt19937& mrand) : HoeffdingTree() {
+
+    this->params.leafPrediction = leafPredictionType;
+    this->mrand = mrand;
+}
+
+HoeffdingTree::HoeffdingTree(
+        int gracePeriod,
+	    float splitConfidence,
+	    float tieThreshold,
+	    bool binarySplits,
+	    bool noPrePrune,
+	    int nbThreshold,
+        int leafPredictionType,
+        std::mt19937& mrand) : HoeffdingTree() {
+
+    this->params.gracePeriod = gracePeriod,
+    this->params.splitConfidence = splitConfidence;
+    this->params.tieThreshold = tieThreshold;
+    this->params.binarySplits = binarySplits;
+    this->params.noPrePrune = noPrePrune;
+    this->params.nbThreshold = nbThreshold;
+
     this->params.leafPrediction = leafPredictionType;
     this->mrand = mrand;
 }
