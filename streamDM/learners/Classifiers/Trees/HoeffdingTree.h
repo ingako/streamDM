@@ -121,6 +121,9 @@ public:
 
 	virtual void toJson(Json::Value& jv);
 
+    void generate_data();
+    void generate_data_by_random_walk(Node* node, Instance* pseudo_instance, vector<int> attIndices, vector<double> attValues);
+
 private:
 	string showSplitSuggestion(AttributeSplitSuggestion* ass);
 	void showBestSplitSuggestions(
@@ -136,6 +139,7 @@ protected:
 
 	bool mFixTree;
 	vector<int> mTreePropertyIndexList;
+
 };
 // class HoeffdingTree
 

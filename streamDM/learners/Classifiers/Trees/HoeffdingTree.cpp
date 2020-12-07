@@ -242,6 +242,65 @@ void HoeffdingTree::showTreePath(const Instance& instance, Node* node) {
 	return;
 }
 
+void HoeffdingTree::generate_data() {
+    vector<int> attIndices;
+    vector<double> attValues;
+    Instance* pseudo_instance;
+    generate_data_by_random_walk(this->treeRoot, pseudo_instance, attIndices, attValues);
+
+    for (int v : attIndices) {
+        cout << v << " ";
+    }
+    cout << endl;
+
+    for (int v : attValues) {
+        cout << v << " ";
+    }
+    cout << endl;
+}
+
+void HoeffdingTree::generate_data_by_random_walk(Node* node, Instance* pseudo_instance, vector<int> attIndices, vector<double> attValues) {
+    if (node == nullptr) {
+        cout << "Empty root" << endl;
+        exit(0);
+    }
+
+    // Add class label
+    if (node->isLeaf()) {
+        vector<double> class_predictions = node->getObservedClassDistribution();
+        double max_val = class_predictions[0];
+        int labelIdx = 0;
+
+        // Find class label with the highest probability
+        for (int i = 1; i < class_predictions.size(); i++) {
+            if (max_val < class_predictions[i]) {
+                max_val = class_predictions[i];
+                labelIdx = i;
+            }
+        }
+        attIndices.push_back(labelIdx);
+
+        return;
+    }
+
+    SplitNode* splitNode = (SplitNode*) node;
+    InstanceConditionalTest* splitTest = splitNode->splitTest;
+    if (splitTest == nullptr) {
+        cout << "Empty split test" << endl;
+        exit(0);
+    }
+
+	int attIdx = splitTest->getAttIndex();
+    double attVal = splitTest->getAttValue();
+    attIndices.push_back(attIdx);
+    attValues.push_back(attVal);
+
+    std::uniform_int_distribution<int> distr(0, splitNode->numChildren());
+    int randChildIdx = distr(mrand);
+    Node* child = splitNode->getChild(randChildIdx);
+    generate_data_by_random_walk(child, pseudo_instance, attIndices, attValues);
+}
+
 double HoeffdingTree::probability(const Instance&, int int1) {
 	return 0;
 }
