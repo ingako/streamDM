@@ -25,6 +25,11 @@
 class DenseInstance: public Instance {
 public:
 	DenseInstance();
+    DenseInstance(double weight,
+                  bool instanceInformationSaved,
+                  vector<double> inputData,
+                  vector<double> outputData,
+                  InstanceInformation* instanceInformation);
 	virtual ~DenseInstance();
 
 	//Values
@@ -35,9 +40,13 @@ public:
 	virtual void addValues(const vector<double>& values);
 	virtual void addLabels(const vector<double>& values);
 
-	Instance* clone();
+	virtual void setValue(int attIdx, double value);
+	virtual void setLabel(int attIdx, double label);
 
-protected:
+	Instance* clone();
+	DenseInstance* cloneDenseInstance();
+
+// protected:
 	vector<double> mInputData;
 	vector<double> mOutputData;
 };

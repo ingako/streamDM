@@ -242,26 +242,57 @@ void HoeffdingTree::showTreePath(const Instance& instance, Node* node) {
 	return;
 }
 
-void HoeffdingTree::generate_data() {
+void HoeffdingTree::generate_data(DenseInstance* sample_instance) {
     vector<int> attIndices;
     vector<double> attValues;
-    Instance* pseudo_instance;
-    generate_data_by_random_walk(this->treeRoot, pseudo_instance, attIndices, attValues);
-
-    for (int v : attIndices) {
+    cout << "before clone..." << endl << flush;
+    for (double v : sample_instance->mInputData) {
+        cout << v << " ";
+    }
+    cout << endl;
+    for (double v : sample_instance->mOutputData) {
         cout << v << " ";
     }
     cout << endl;
 
-    for (int v : attValues) {
+    DenseInstance* pseudo_instance = new DenseInstance(sample_instance->getWeight(),
+                                                       sample_instance->instanceInformationSaved,
+                                                       sample_instance->mInputData,
+                                                       sample_instance->mOutputData,
+                                                       sample_instance->getInstanceInformation());
+
+    cout << "before generation" << endl << flush;
+    for (double v : sample_instance->mInputData) {
+        cout << v << " ";
+    }
+    cout << endl;
+    for (double v : sample_instance->mOutputData) {
+        cout << v << " ";
+    }
+    cout << endl;
+
+    generate_data_by_random_walk(this->treeRoot, pseudo_instance, attIndices, attValues);
+
+    for (double v : sample_instance->mInputData) {
+        cout << v << " ";
+    }
+    cout << endl;
+    for (double v : sample_instance->mOutputData) {
         cout << v << " ";
     }
     cout << endl;
 }
 
-void HoeffdingTree::generate_data_by_random_walk(Node* node, Instance* pseudo_instance, vector<int> attIndices, vector<double> attValues) {
+void HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInstance* pseudo_instance, vector<int>& attIndices, vector<double>& attValues) {
     if (node == nullptr) {
         cout << "Empty root" << endl;
+        exit(0);
+    }
+
+    SplitNode* splitNode = (SplitNode*) node;
+    InstanceConditionalTest* splitTest = splitNode->splitTest;
+    if (splitTest == nullptr) {
+        cout << "Empty splitTest" << endl;
         exit(0);
     }
 
@@ -279,23 +310,20 @@ void HoeffdingTree::generate_data_by_random_walk(Node* node, Instance* pseudo_in
             }
         }
         attIndices.push_back(labelIdx);
+        cout << "labelIdx" << labelIdx << endl;
+        pseudo_instance->setLabel(0, labelIdx);
 
         return;
-    }
-
-    SplitNode* splitNode = (SplitNode*) node;
-    InstanceConditionalTest* splitTest = splitNode->splitTest;
-    if (splitTest == nullptr) {
-        cout << "Empty split test" << endl;
-        exit(0);
     }
 
 	int attIdx = splitTest->getAttIndex();
     double attVal = splitTest->getAttValue();
     attIndices.push_back(attIdx);
     attValues.push_back(attVal);
+    cout << attIdx << ":" << attVal << endl;
+    pseudo_instance->setValue(attIdx, attVal);
 
-    std::uniform_int_distribution<int> distr(0, splitNode->numChildren());
+    std::uniform_int_distribution<int> distr(0, splitNode->numChildren() - 1);
     int randChildIdx = distr(mrand);
     Node* child = splitNode->getChild(randChildIdx);
     generate_data_by_random_walk(child, pseudo_instance, attIndices, attValues);

@@ -62,9 +62,12 @@ public:
 
 	virtual Instance* clone() = 0;
 
+	virtual void setValue(int attIdx, double value);
+	virtual void setLabel(int attIdx, double label);
+	bool instanceInformationSaved;
+
 protected:
 	InstanceInformation* instanceInformation;
-	bool instanceInformationSaved;
 	double weight;
 };
 

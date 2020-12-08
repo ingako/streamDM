@@ -90,6 +90,9 @@ void Instance::addLabels(const vector<double>& values) {
 
 }
 
+void Instance::setValue(int attIdx, double value) {}
+void Instance::setLabel(int attIdx, double label) {}
+
 Instance* cloneInstance(const Instance* s) {
 	Instance* temp = (Instance*) s;
 	return temp->clone();
