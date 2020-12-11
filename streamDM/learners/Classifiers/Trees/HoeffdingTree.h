@@ -121,8 +121,9 @@ public:
 
 	virtual void toJson(Json::Value& jv);
 
-    void generate_data(DenseInstance* sample_instance);
-    void generate_data_by_random_walk(Node* node, DenseInstance* pseudo_instance, vector<int>& attIndices, vector<double>& attValues);
+    DenseInstance * generate_data(DenseInstance* sample_instance);
+    // void generate_data_by_random_walk(Node* node, DenseInstance* pseudo_instance);
+    DenseInstance* generate_data_by_random_walk(Node* node, DenseInstance* pseudo_instance);
 
 private:
 	string showSplitSuggestion(AttributeSplitSuggestion* ass);
