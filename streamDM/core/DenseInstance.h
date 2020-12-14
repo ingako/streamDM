@@ -44,11 +44,12 @@ public:
 	virtual void setLabel(int attIdx, double label);
 
 	Instance* clone();
-	DenseInstance* cloneDenseInstance();
 
 // protected:
 	vector<double> mInputData;
 	vector<double> mOutputData;
+
+	vector<int> modifiedAttIndices;
 };
 
 #endif /* DENSEINSTANCE_H_ */

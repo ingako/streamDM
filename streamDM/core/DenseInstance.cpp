@@ -23,18 +23,6 @@ DenseInstance::DenseInstance() {
 	weight = 1;
 }
 
-DenseInstance::DenseInstance(double weight,
-                             bool instanceInformationSaved,
-                             vector<double> inputData,
-                             vector<double> outputData,
-	                         InstanceInformation* instanceInformation) {
-	this->weight = weight;
-    this->mInputData = inputData;
-    this->mOutputData = outputData;
-    this->instanceInformationSaved = instanceInformationSaved;
-	this->instanceInformation = instanceInformation->clone();
-}
-
 DenseInstance::~DenseInstance() {
 }
 
@@ -71,25 +59,11 @@ void DenseInstance::setLabel(int labelIdx, double label) {
 	mOutputData[labelIdx] = label;
 }
 
-Instance* DenseInstance::clone(){
+Instance* DenseInstance::clone() {
 	DenseInstance* di = new DenseInstance();
 	if (this->instanceInformationSaved) {
 		di->instanceInformation = this->instanceInformation->clone();
 	}else {
-		di->instanceInformation = this->instanceInformation;
-	}
-	di->weight = this->weight;
-	di->mInputData = this->mInputData;
-	di->mOutputData = this->mOutputData;
-	di->instanceInformationSaved = this->instanceInformationSaved;
-	return di;
-}
-
-DenseInstance* DenseInstance::cloneDenseInstance() {
-	DenseInstance* di = new DenseInstance();
-    if (this->instanceInformationSaved) {
-		di->instanceInformation = this->instanceInformation->clone();
-	} else {
 		di->instanceInformation = this->instanceInformation;
 	}
 	di->weight = this->weight;
