@@ -242,22 +242,8 @@ void HoeffdingTree::showTreePath(const Instance& instance, Node* node) {
 	return;
 }
 
-DenseInstance * HoeffdingTree::generate_data(DenseInstance* sample_instance) {
-    cout << "before clone--------------------------------" << endl << flush;
-    for (double v : sample_instance->mInputData) {
-        cout << v << " ";
-    }
-    for (double v : sample_instance->mOutputData) {
-        cout << v << " ";
-    }
-    cout << endl;
-
-    // DenseInstance* pseudo_instance = (DenseInstance*) sample_instance->clone(); // segfaults
-    DenseInstance* pseudo_instance = new DenseInstance(sample_instance->getWeight(),
-                                                       sample_instance->instanceInformationSaved,
-                                                       sample_instance->mInputData,
-                                                       sample_instance->mOutputData,
-                                                       sample_instance->getInstanceInformation()->clone());
+DenseInstance* HoeffdingTree::generate_data(DenseInstance* sample_instance) {
+    DenseInstance* pseudo_instance = (DenseInstance*) sample_instance->clone();
 
     cout << "before random walk--------------------------" << endl << flush;
     cout << "sample instance" << endl << flush;
@@ -297,6 +283,8 @@ DenseInstance * HoeffdingTree::generate_data(DenseInstance* sample_instance) {
         cout << v << " ";
     }
     cout << endl;
+
+    return pseudo_instance;
 }
 
 DenseInstance* HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInstance* pseudo_instance) {
@@ -332,7 +320,19 @@ DenseInstance* HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInst
 
 	int attIdx = splitTest->getAttIndex();
     double attVal = splitTest->getAttValue();
+    if (pseudo_instance->getInputAttribute(attIdx)->isNumeric()) {
+        // Generate value by normal distribution
+        double mean = splitTest->att_mean;
+        double stddev = sqrt(splitTest->squared_distance_sum / splitTest->num_instances_seen);
+        normal_distribution<double> normal_distr(mean, stddev);
+
+        do {
+            attVal = normal_distr(mrand);
+        } while (attVal < splitTest->min_att_val || splitTest->max_att_val < attVal);
+    }
+
     pseudo_instance->setValue(attIdx, attVal);
+    pseudo_instance->modifiedAttIndices.push_back(attIdx);
 
     std::uniform_int_distribution<int> distr(0, splitNode->numChildren() - 1);
     int randChildIdx = distr(mrand);

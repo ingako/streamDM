@@ -121,8 +121,8 @@ public:
 
 	virtual void toJson(Json::Value& jv);
 
+	// For transfer
     DenseInstance * generate_data(DenseInstance* sample_instance);
-    // void generate_data_by_random_walk(Node* node, DenseInstance* pseudo_instance);
     DenseInstance* generate_data_by_random_walk(Node* node, DenseInstance* pseudo_instance);
 
 private:

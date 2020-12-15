@@ -44,6 +44,14 @@ public:
 	virtual void toJson(Json::Value& jv) = 0;
 	virtual int getAttIndex() = 0;
 	virtual double getAttValue() = 0;
+
+    // For transfer
+    // Keep track of stats for numeric attributes
+    double att_mean;
+    double squared_distance_sum;
+    long num_instances_seen;
+    double min_att_val = numeric_limits<double>::max();
+    double max_att_val = numeric_limits<double>::min();
 };
 
 class InstanceConditionalBinaryTest: public InstanceConditionalTest {
