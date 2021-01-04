@@ -294,11 +294,6 @@ DenseInstance* HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInst
     }
 
     SplitNode* splitNode = (SplitNode*) node;
-    InstanceConditionalTest* splitTest = splitNode->splitTest;
-    if (splitTest == nullptr) {
-        cout << "Empty splitTest" << endl;
-        exit(0);
-    }
 
     // Add class label
     if (node->isLeaf()) {
@@ -318,6 +313,12 @@ DenseInstance* HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInst
         return pseudo_instance;
     }
 
+    InstanceConditionalTest* splitTest = splitNode->splitTest;
+    if (splitTest == nullptr) {
+        cout << "Empty splitTest" << endl;
+        exit(0);
+    }
+
 	int attIdx = splitTest->getAttIndex();
     double attVal = splitTest->getAttValue();
     if (pseudo_instance->getInputAttribute(attIdx)->isNumeric()) {
@@ -325,6 +326,11 @@ DenseInstance* HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInst
         double mean = splitTest->att_mean;
         double stddev = sqrt(splitTest->squared_distance_sum / splitTest->num_instances_seen);
         normal_distribution<double> normal_distr(mean, stddev);
+
+        if (splitTest->min_att_val > splitTest->max_att_val) {
+            cout << "splitTest min attribute value is greater than max" << endl;
+            exit(1);
+        }
 
         do {
             attVal = normal_distr(mrand);

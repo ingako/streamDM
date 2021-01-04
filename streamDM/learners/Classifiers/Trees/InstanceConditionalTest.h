@@ -47,9 +47,9 @@ public:
 
     // For transfer
     // Keep track of stats for numeric attributes
-    double att_mean;
+    double att_mean = 0.0;
     double squared_distance_sum;
-    long num_instances_seen;
+    long num_instances_seen = 0;
     double min_att_val = numeric_limits<double>::max();
     double max_att_val = numeric_limits<double>::min();
 };
