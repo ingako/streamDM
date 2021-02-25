@@ -175,6 +175,7 @@ void HoeffdingTree::Params::toJson(Json::Value& jv) {
 }
 
 void HoeffdingTree::train(const Instance& instance) {
+    trainingWeightSeenByModel += instance.getWeight();
 	trainOnInstanceImpl(&instance);
 }
 
@@ -245,44 +246,44 @@ void HoeffdingTree::showTreePath(const Instance& instance, Node* node) {
 DenseInstance* HoeffdingTree::generate_data(DenseInstance* sample_instance) {
     DenseInstance* pseudo_instance = (DenseInstance*) sample_instance->clone();
 
-    cout << "before random walk--------------------------" << endl << flush;
-    cout << "sample instance" << endl << flush;
-    for (double v : sample_instance->mInputData) {
-        cout << v << " ";
-    }
-    for (double v : sample_instance->mOutputData) {
-        cout << v << " ";
-    }
-    cout << endl;
-    cout << "pseudo instance" << endl << flush;
-    for (double v : pseudo_instance->mInputData) {
-        cout << v << " ";
-    }
-    for (double v : pseudo_instance->mOutputData) {
-        cout << v << " ";
-    }
-    cout << endl;
+    // cout << "before random walk--------------------------" << endl << flush;
+    // cout << "sample instance" << endl << flush;
+    // for (double v : sample_instance->mInputData) {
+    //     cout << v << " ";
+    // }
+    // for (double v : sample_instance->mOutputData) {
+    //     cout << v << " ";
+    // }
+    // cout << endl;
+    // cout << "pseudo instance" << endl << flush;
+    // for (double v : pseudo_instance->mInputData) {
+    //     cout << v << " ";
+    // }
+    // for (double v : pseudo_instance->mOutputData) {
+    //     cout << v << " ";
+    // }
+    // cout << endl;
 
     pseudo_instance = generate_data_by_random_walk(this->treeRoot, pseudo_instance);
 
-    cout << "after random walk---------------------------" << endl << flush;
-    cout << "sample instance" << endl << flush;
-    for (double v : sample_instance->mInputData) {
-        cout << v << " ";
-    }
-    for (double v : sample_instance->mOutputData) {
-        cout << v << " ";
-    }
-    cout << endl;
+    // cout << "after random walk---------------------------" << endl << flush;
+    // cout << "sample instance" << endl << flush;
+    // for (double v : sample_instance->mInputData) {
+    //     cout << v << " ";
+    // }
+    // for (double v : sample_instance->mOutputData) {
+    //     cout << v << " ";
+    // }
+    // cout << endl;
 
-    cout << "pseudo instance" << endl << flush;
-    for (double v : pseudo_instance->mInputData) {
-        cout << v << " ";
-    }
-    for (double v : pseudo_instance->mOutputData) {
-        cout << v << " ";
-    }
-    cout << endl;
+    // cout << "pseudo instance" << endl << flush;
+    // for (double v : pseudo_instance->mInputData) {
+    //     cout << v << " ";
+    // }
+    // for (double v : pseudo_instance->mOutputData) {
+    //     cout << v << " ";
+    // }
+    // cout << endl;
 
     return pseudo_instance;
 }
@@ -332,9 +333,19 @@ DenseInstance* HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInst
             exit(1);
         }
 
+        int loop_count = 0;
         do {
             attVal = normal_distr(mrand);
+
+            loop_count += 1;
+            if (loop_count > 500) {
+                cout << "infinite loop" << endl;
+                exit(1);
+                // break;
+            }
         } while (attVal < splitTest->min_att_val || splitTest->max_att_val < attVal);
+
+        // cout << "attVal: " << attVal << endl;
     }
 
     pseudo_instance->setValue(attIdx, attVal);
@@ -345,6 +356,49 @@ DenseInstance* HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInst
     Node* child = splitNode->getChild(randChildIdx);
     generate_data_by_random_walk(child, pseudo_instance);
 }
+
+string HoeffdingTree::printTree() {
+    if (treeRoot == nullptr) {
+        return "empty tree";
+    }
+
+    deque<SplitNode*> nodes;
+    nodes.push_back((SplitNode*) treeRoot);
+    std::stringstream ss;
+
+    while (nodes.size() > 0) {
+        int size = nodes.size();
+        for (int i = 0; i < size; i++) {
+            SplitNode *curNode = nodes[0];
+            nodes.pop_front();
+
+            if (curNode->isLeaf()) {
+                vector<double> class_predictions = curNode->getObservedClassDistribution();
+                double max_val = class_predictions[0];
+                int labelIdx = 0;
+
+                // Find class label with the highest probability
+                for (int i = 1; i < class_predictions.size(); i++) {
+                    if (max_val < class_predictions[i]) {
+                        max_val = class_predictions[i];
+                        labelIdx = i;
+                    }
+                }
+                ss << "label:" << labelIdx << " ";
+
+            } else {
+                ss << curNode->splitTest->getAttValue() << " ";
+                for (int j = 0; j < curNode->numChildren(); j++) {
+                    nodes.push_back((SplitNode*) curNode->getChild(j));
+                }
+            }
+        }
+        ss << endl;
+    }
+
+    return ss.str();
+}
+
 
 double HoeffdingTree::probability(const Instance&, int int1) {
 	return 0;
@@ -564,7 +618,7 @@ void HoeffdingTree::attemptToSplit(ActiveLearningNode* node, SplitNode* parent,
 		AttributeSplitSuggestion* splitDecision = (*iter);
 
 		// debug: show best split suggestion
-//			cout << showSplitSuggestion(splitDecision) << endl;
+		// cout << showSplitSuggestion(splitDecision) << endl;
 
 		if (splitDecision->splitTest == nullptr) {
 			// preprune - null wins

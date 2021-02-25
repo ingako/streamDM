@@ -53,6 +53,8 @@ public:
 	double probability(const Instance&, int);
     std::mt19937 mrand;
 
+    string printTree();
+
 public:
 	double* classPrediction;
 
