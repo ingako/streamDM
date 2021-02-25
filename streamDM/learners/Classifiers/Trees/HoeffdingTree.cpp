@@ -351,6 +351,7 @@ DenseInstance* HoeffdingTree::generate_data_by_random_walk(Node* node, DenseInst
     pseudo_instance->setValue(attIdx, attVal);
     pseudo_instance->modifiedAttIndices.push_back(attIdx);
 
+    // TODO use a different mrand for experiments
     std::uniform_int_distribution<int> distr(0, splitNode->numChildren() - 1);
     int randChildIdx = distr(mrand);
     Node* child = splitNode->getChild(randChildIdx);
@@ -378,16 +379,17 @@ string HoeffdingTree::printTree() {
                 int labelIdx = 0;
 
                 // Find class label with the highest probability
-                for (int i = 1; i < class_predictions.size(); i++) {
-                    if (max_val < class_predictions[i]) {
-                        max_val = class_predictions[i];
-                        labelIdx = i;
+                for (int j = 1; j < class_predictions.size(); j++) {
+                    if (max_val < class_predictions[j]) {
+                        max_val = class_predictions[j];
+                        labelIdx = j;
                     }
                 }
-                ss << "label:" << labelIdx << " ";
+                ss << "[label]" << labelIdx << " ";
 
             } else {
-                ss << curNode->splitTest->getAttValue() << " ";
+                ss << "[" << curNode->splitTest->getAttIndex() << "]"
+                   << curNode->splitTest->getAttValue() << " ";
                 for (int j = 0; j < curNode->numChildren(); j++) {
                     nodes.push_back((SplitNode*) curNode->getChild(j));
                 }
