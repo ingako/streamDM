@@ -287,6 +287,7 @@ FoundNode* SplitNode::filterInstanceToLeaf(const Instance* inst,
 		}
 		return new FoundNode(nullptr, this, childIndex);
 	}
+
 	return new FoundNode(this, parent, parentBranch);
 }
 
@@ -437,10 +438,13 @@ void ActiveLearningNode::learnFromInstance(const Instance* inst,
 
 	auto iter = (*attributeObservers).begin();
 
-    vector<int> attribute_indices = Utils::selectKNums(
-            inst->getNumberInputAttributes(),
-            sqrt(inst->getNumberInputAttributes()) + 1,
-            mrand);
+    vector<int> attribute_indices;
+    if (ht->is_ensemble_member) {
+        attribute_indices = Utils::selectKNums(
+                inst->getNumberInputAttributes(),
+                sqrt(inst->getNumberInputAttributes()) + 1,
+                mrand);
+    }
 
 	for (int i = 0; i < inst->getNumberInputAttributes(); i++, iter++) {
 		int instAttIndex = i;
@@ -453,7 +457,8 @@ void ActiveLearningNode::learnFromInstance(const Instance* inst,
 			(*iter) = obs;
 		}
 
-        if (std::find(attribute_indices.begin(), attribute_indices.end(), instAttIndex) != attribute_indices.end()) {
+        if (ht->is_ensemble_member
+                && std::find(attribute_indices.begin(), attribute_indices.end(), instAttIndex) != attribute_indices.end()) {
             obs->observeAttributeClass(inst->getInputAttributeValue(instAttIndex),
                     (int) inst->getLabel(), inst->getWeight());
         } else {

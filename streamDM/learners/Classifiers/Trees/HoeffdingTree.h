@@ -52,6 +52,7 @@ public:
 	double* getPrediction(const Instance&);
 	double probability(const Instance&, int);
     std::mt19937 mrand;
+    bool is_ensemble_member = false;
 
     string printTree();
 

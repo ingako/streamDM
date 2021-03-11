@@ -53,6 +53,7 @@ HoeffdingTree::HoeffdingTree() {
 HoeffdingTree::HoeffdingTree(std::mt19937& mrand) :
     HoeffdingTree() {
     this->mrand = mrand;
+    this->is_ensemble_member = true;
 }
 
 HoeffdingTree::HoeffdingTree(
@@ -61,6 +62,7 @@ HoeffdingTree::HoeffdingTree(
 
     this->params.leafPrediction = leafPredictionType;
     this->mrand = mrand;
+    this->is_ensemble_member = true;
 }
 
 HoeffdingTree::HoeffdingTree(
