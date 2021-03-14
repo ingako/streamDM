@@ -457,13 +457,18 @@ void ActiveLearningNode::learnFromInstance(const Instance* inst,
 			(*iter) = obs;
 		}
 
-        if (ht->is_ensemble_member
-                && std::find(attribute_indices.begin(), attribute_indices.end(), instAttIndex) != attribute_indices.end()) {
-            obs->observeAttributeClass(inst->getInputAttributeValue(instAttIndex),
-                    (int) inst->getLabel(), inst->getWeight());
+        if (ht->is_ensemble_member) {
+            if (std::find(attribute_indices.begin(), attribute_indices.end(), instAttIndex) !=
+                attribute_indices.end()) {
+                obs->observeAttributeClass(inst->getInputAttributeValue(instAttIndex),
+                                           (int) inst->getLabel(), inst->getWeight());
+            } else {
+                obs->observeAttributeClass(inst->getInputAttributeValue(instAttIndex),
+                                           (int) inst->getLabel(), 0);
+            }
         } else {
-            obs->observeAttributeClass(inst->getInputAttributeValue(instAttIndex),
-                    (int) inst->getLabel(), 0);
+                obs->observeAttributeClass(inst->getInputAttributeValue(instAttIndex),
+                                           (int) inst->getLabel(), inst->getWeight());
         }
 	}
 }
